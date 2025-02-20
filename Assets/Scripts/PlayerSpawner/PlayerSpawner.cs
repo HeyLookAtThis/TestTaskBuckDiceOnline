@@ -1,21 +1,22 @@
+using Cinemachine;
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerSpawner : SimulationBehaviour, IPlayerJoined, IPlayerLeft
 {
+    [SerializeField] private CinemachineVirtualCamera _camera;
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private GameObject _table;
     [SerializeField] private List<SpawnPoint> _points;
 
     public void PlayerJoined(PlayerRef player)
     {
         if (player == Runner.LocalPlayer)
         {
-            Runner.Spawn(_playerPrefab, GetFreePoint(player.PlayerId), Quaternion.identity);
+            var newPlayer = Runner.Spawn(_playerPrefab, GetFreePoint(player.PlayerId), Quaternion.identity);
 
-            if (_playerPrefab.TryGetComponent<Player>(out Player component))
-                component.Camera.LookAt = _table.transform;
+            if (newPlayer.TryGetComponent<Player>(out Player component))
+                _camera.Follow = component.CameraTarget;
         }
     }
 
