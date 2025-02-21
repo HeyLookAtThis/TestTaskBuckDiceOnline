@@ -1,9 +1,9 @@
-using Fusion;
+using Cinemachine;
 using UnityEngine;
 
-public class Player : NetworkBehaviour
+public class Player : MonoBehaviour
 {
-    [SerializeField] private Transform _cameraTarget;
+    [SerializeField] private CinemachineVirtualCamera _camera;
 
-    public Transform CameraTarget => _cameraTarget;
+    public CinemachineVirtualCamera Camera => _camera;
 }
