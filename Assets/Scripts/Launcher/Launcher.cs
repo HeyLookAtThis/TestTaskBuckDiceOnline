@@ -10,6 +10,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _progressLabel;
 
     private string _gameVersion = "1";
+    private bool _isConnecting;
 
     private void Awake() => PhotonNetwork.AutomaticallySyncScene = true;
 
@@ -21,8 +22,12 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("PUN Basics Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
-        PhotonNetwork.JoinRandomRoom();
+        if (_isConnecting)
+        {
+            Debug.Log("PUN Basics Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
+            PhotonNetwork.JoinRandomRoom();
+            _isConnecting = false;
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -42,6 +47,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            Debug.Log("We load the 'Room for 1' ");
+
+            PhotonNetwork.LoadLevel(Scenes.Room);
+        }
     }
 
     public void Connect()
@@ -55,7 +67,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         else
         {
-            PhotonNetwork.ConnectUsingSettings();
+            _isConnecting = PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = _gameVersion;
         }
     }    
