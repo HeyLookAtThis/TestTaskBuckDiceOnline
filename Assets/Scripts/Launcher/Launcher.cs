@@ -18,14 +18,17 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         _progressLabel.SetActive(false);
         _controlPanel.SetActive(true);
+
+        _isConnecting = PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.GameVersion = _gameVersion;
     }
 
     public override void OnConnectedToMaster()
     {
         if (_isConnecting)
         {
-            Debug.Log("PUN Basics Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
-            PhotonNetwork.JoinRandomRoom();
+            Debug.Log("Launcher: OnConnectedToMaster() was called by PUN");
+            //PhotonNetwork.JoinRandomRoom();
             _isConnecting = false;
         }
     }
@@ -35,40 +38,54 @@ public class Launcher : MonoBehaviourPunCallbacks
         _progressLabel.SetActive(false);
         _controlPanel.SetActive(true);
 
-        Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
+        Debug.LogWarningFormat("Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
-        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = MaxPlayersPerRoom });
+        Debug.LogWarningFormat("Launcher:OnJoinRandomFailed() was called by PUN. No random room available");
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
-
-        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-        {
-            Debug.Log("We load the 'Room for 1' ");
-
-            PhotonNetwork.LoadLevel(Scenes.Room);
-        }
+        PhotonNetwork.LoadLevel(Scenes.Room);
     }
 
-    public void Connect()
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
+    }
+
+    public void Connect(string roomName)
     {
         _progressLabel.SetActive(true);
         _controlPanel.SetActive(false);
 
         if (PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.JoinRandomRoom();
+            PhotonNetwork.JoinRoom(roomName);
         }
         else
         {
             _isConnecting = PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = _gameVersion;
         }
-    }    
+    }
+
+    public void Create(string roomName)
+    {
+        _progressLabel.SetActive(true);
+        _controlPanel.SetActive(false);
+
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.CreateRoom(roomName, new RoomOptions { MaxPlayers = MaxPlayersPerRoom });
+            Debug.Log("Launcher: Create");
+        }
+        else
+        {
+            _isConnecting = PhotonNetwork.ConnectUsingSettings();
+            PhotonNetwork.GameVersion = _gameVersion;
+        }
+    }
 }

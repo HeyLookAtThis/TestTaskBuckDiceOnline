@@ -1,41 +1,47 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(TMP_InputField))]
 public class PlayerNameInputField : MonoBehaviour
 {
     private const string PlayerNamePrefKey = "PlayerName";
 
+    private TMP_InputField _inputField;
+
+    private void Awake()
+    {
+        _inputField = GetComponent<TMP_InputField>();
+    }
+
     private void Start()
     {
         string defaultName = string.Empty;
-        TMP_InputField inputField = GetComponent<TMP_InputField>();
 
-        if(inputField != null)
+        if(_inputField != null)
         {
             if (PlayerPrefs.HasKey(PlayerNamePrefKey))
             {
                 defaultName = PlayerPrefs.GetString(PlayerNamePrefKey);
-                inputField.text = defaultName;
+                _inputField.text = defaultName;
             }
         }
 
         PhotonNetwork.NickName = defaultName;
     }
 
-    public void SetPlayerName(string name)
+    public void SetPlayerName()
     {
-        if (string.IsNullOrEmpty(name))
+        int maxValue = 100;
+
+        if (string.IsNullOrEmpty(PhotonNetwork.NickName))
         {
-            Debug.LogError("Player Name is null or empty");
+            PhotonNetwork.NickName = "Player" + PhotonNetwork.LocalPlayer.UserId + Random.Range(0, maxValue);
             return;
         }
 
-        PhotonNetwork.NickName = name;
-        PlayerPrefs.SetString(PlayerNamePrefKey, name);
+        PhotonNetwork.NickName = _inputField.text;
+        PlayerPrefs.SetString(PlayerNamePrefKey, _inputField.text);
+        Debug.Log(PhotonNetwork.NickName);
     }
 }
