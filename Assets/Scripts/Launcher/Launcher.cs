@@ -28,7 +28,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (_isConnecting)
         {
             Debug.Log("Launcher: OnConnectedToMaster() was called by PUN");
-            //PhotonNetwork.JoinRandomRoom();
+            PhotonNetwork.JoinLobby();
             _isConnecting = false;
         }
     }
