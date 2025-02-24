@@ -8,7 +8,7 @@ public class RoomBootstrap : MonoBehaviour
     private void Start()
     {
         DiceFactory diceFactory = new(_diceSpawnPoint.position);
-        Dice dice = diceFactory.Get();
+        Dice dice = diceFactory.Get().GetComponent<Dice>();
         _diceRollMediator.Initialize(dice);
     }
 }

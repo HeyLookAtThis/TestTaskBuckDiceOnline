@@ -7,13 +7,14 @@ public class DiceFactory
 
     public DiceFactory(Vector3 posiion) => _position = posiion;
 
-    public Dice Get()
+    public GameObject Get()
     {
         Dice dice = Object.FindObjectOfType<Dice>();
+        Debug.Log(dice);
 
         if (dice == null)
-            return PhotonNetwork.InstantiateRoomObject(Prefabs.DicePrefab, _position, Random.rotation).GetComponent<Dice>();
+            return PhotonNetwork.InstantiateRoomObject(Prefabs.DicePrefab, _position, Random.rotation);
 
-        return dice;
+        return dice.gameObject;
     }
 }
