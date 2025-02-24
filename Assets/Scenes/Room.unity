@@ -1885,7 +1885,11 @@ PrefabInstance:
     - target: {fileID: 2911762963881478619, guid: 0ee5782b2e99cb84bbcf415ff8f01bfe, type: 3}
       propertyPath: ObservedComponents.Array.data[0]
       value: 
-      objectReference: {fileID: 1964868209}
+      objectReference: {fileID: 0}
+    - target: {fileID: 5826166637254300540, guid: 0ee5782b2e99cb84bbcf415ff8f01bfe, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6874970857068492513, guid: 0ee5782b2e99cb84bbcf415ff8f01bfe, type: 3}
       propertyPath: m_Name
       value: Dice
@@ -1944,17 +1948,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5330cd52b5fa294eb31255524dff661, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1964868209 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1980281790336431688, guid: 0ee5782b2e99cb84bbcf415ff8f01bfe, type: 3}
-  m_PrefabInstance: {fileID: 1964868207}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2031838285

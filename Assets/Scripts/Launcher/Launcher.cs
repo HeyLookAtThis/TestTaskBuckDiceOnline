@@ -5,41 +5,34 @@ using UnityEngine;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
+    [SerializeField] private PanelsSwitcher _panelsSwitcher;
+
     private const byte MaxPlayersPerRoom = 4;
 
-    [SerializeField] private GameObject _controlPanel;
-    [SerializeField] private GameObject _progressLabel;
-
-    private bool _isConnecting;
+    public bool IsConnecting {  get; private set; }
 
     private Coroutine _connectingWaiter;
 
     private void Awake() => PhotonNetwork.AutomaticallySyncScene = true;
-
-    private void Start()
-    {
-        ShowProgressPanel();
-        TryConnected();
-    }
 
     public override void OnConnectedToMaster()
     {
         if (_connectingWaiter != null)
         {
             StopCoroutine(_connectingWaiter);
-            HideProgressPanel();
+            _panelsSwitcher.HideProgressPanel();
         }
 
-        if (_isConnecting)
+        if (IsConnecting)
         {
             Debug.Log("Launcher: OnConnectedToMaster() was called by PUN");
-            _isConnecting = false;
+            IsConnecting = false;
         }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        HideProgressPanel();
+        _panelsSwitcher.HideProgressPanel();
         Debug.LogWarningFormat("Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
     }
 
@@ -56,29 +49,38 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void Connect()
     {
-        ShowProgressPanel();
-        TryConnected();
+        _panelsSwitcher.ShowProgressPanel();
+        TryConnecting();
         PhotonNetwork.JoinRandomRoom();
     }
 
     public void Create(string roomName)
     {
-        ShowProgressPanel();
-        TryConnected();
+        _panelsSwitcher.ShowProgressPanel();
+        TryConnecting();
         PhotonNetwork.CreateRoom(roomName, new RoomOptions { MaxPlayers = MaxPlayersPerRoom });
     }
 
-    private void TryConnected()
+    public void FindGame(string roomName)
+    {
+        _panelsSwitcher.ShowProgressPanel();
+        TryConnecting();
+        PhotonNetwork.JoinRoom(roomName);
+    }
+
+    public void TryConnecting()
     {
         if (PhotonNetwork.IsConnected == false)
         {
-            _isConnecting = PhotonNetwork.ConnectUsingSettings();
+            IsConnecting = PhotonNetwork.ConnectUsingSettings();
             _connectingWaiter = StartCoroutine(ConnectingWaiter());
         }
     }
 
     private IEnumerator ConnectingWaiter()
     {
+        _panelsSwitcher.ShowProgressPanel();
+
         float seconds = 5f;
         var waitTime = new WaitForEndOfFrame();
 
@@ -87,26 +89,13 @@ public class Launcher : MonoBehaviourPunCallbacks
         while(passedTime < seconds)
         {
             passedTime += Time.deltaTime;
-            Debug.Log(passedTime);
             yield return waitTime;
         }
 
         if (passedTime >= seconds)
         {
-            HideProgressPanel();
+            _panelsSwitcher.HideProgressPanel();
             yield break;
         }
-    }
-
-    private void ShowProgressPanel()
-    {
-        _progressLabel.SetActive(true);
-        _controlPanel.SetActive(false);
-    }
-
-    private void HideProgressPanel()
-    {
-        _progressLabel.SetActive(false);
-        _controlPanel.SetActive(true);
     }
 }
