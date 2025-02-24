@@ -9,7 +9,7 @@ public class DiceFactory
 
     public GameObject Get()
     {
-        Dice dice = Object.FindObjectOfType<Dice>();
+        Dice dice = Object.FindObjectOfType<PhotonDiceView>().Dice;
         Debug.Log(dice);
 
         if (dice == null)
