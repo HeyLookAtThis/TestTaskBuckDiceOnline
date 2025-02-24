@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 249150925622268775}
   - component: {fileID: 360164889841480834}
   - component: {fileID: 2803240682279139035}
-  - component: {fileID: 1636208264918826010}
   - component: {fileID: 7519516647218213789}
   m_Layer: 0
   m_Name: CardTable
@@ -86,23 +85,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &1636208264918826010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 594186936958880221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db279e409962c644c879355bbbdad455, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rollButton: {fileID: 0}
-  _diceThrowPoint: {fileID: 0}
-  _dice: {fileID: 0}
-  _force: 10
-  _torque: 10
 --- !u!114 &7519516647218213789
 MonoBehaviour:
   m_ObjectHideFlags: 0

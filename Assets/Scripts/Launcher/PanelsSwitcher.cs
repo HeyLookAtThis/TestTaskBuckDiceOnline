@@ -10,7 +10,7 @@ public class PanelsSwitcher : MonoBehaviour
         HideProgressPanel();
     }
 
-    public void ShowProgressPanel()
+    public void ShowLoadingPanel()
     {
         _loadingPanel.SetActive(true);
         _menuPanel.SetActive(false);

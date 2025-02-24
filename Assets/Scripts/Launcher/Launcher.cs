@@ -1,6 +1,5 @@
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
 using UnityEngine;
 
 public class Launcher : MonoBehaviourPunCallbacks
@@ -11,34 +10,20 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public bool IsConnecting {  get; private set; }
 
-    private Coroutine _connectingWaiter;
-
     private void Awake() => PhotonNetwork.AutomaticallySyncScene = true;
 
     public override void OnConnectedToMaster()
     {
-        if (_connectingWaiter != null)
-        {
-            StopCoroutine(_connectingWaiter);
-            _panelsSwitcher.HideProgressPanel();
-        }
-
-        if (IsConnecting)
-        {
-            Debug.Log("Launcher: OnConnectedToMaster() was called by PUN");
-            IsConnecting = false;
-        }
+        _panelsSwitcher.HideProgressPanel();
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
         _panelsSwitcher.HideProgressPanel();
-        Debug.LogWarningFormat("Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.LogWarningFormat("Launcher:OnJoinRandomFailed() was called by PUN. No random room available");
         PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = MaxPlayersPerRoom });
     }
 
@@ -47,55 +32,37 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(Scenes.Room);
     }
 
-    public void Connect()
+    public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        _panelsSwitcher.ShowProgressPanel();
-        TryConnecting();
+        base.OnCreateRoomFailed(returnCode, message);
+    }
+
+    public override void OnLeftRoom()
+    {
+        _panelsSwitcher.HideProgressPanel();
+    }
+
+    public void JoinRandomRoom()
+    {
+        _panelsSwitcher.ShowLoadingPanel();
         PhotonNetwork.JoinRandomRoom();
     }
 
     public void Create(string roomName)
     {
-        _panelsSwitcher.ShowProgressPanel();
-        TryConnecting();
+        _panelsSwitcher.ShowLoadingPanel();
         PhotonNetwork.CreateRoom(roomName, new RoomOptions { MaxPlayers = MaxPlayersPerRoom });
     }
 
     public void FindGame(string roomName)
     {
-        _panelsSwitcher.ShowProgressPanel();
-        TryConnecting();
+        _panelsSwitcher.ShowLoadingPanel();
         PhotonNetwork.JoinRoom(roomName);
     }
 
-    public void TryConnecting()
+    public void TryConnectingToMaster()
     {
         if (PhotonNetwork.IsConnected == false)
-        {
             IsConnecting = PhotonNetwork.ConnectUsingSettings();
-            _connectingWaiter = StartCoroutine(ConnectingWaiter());
-        }
-    }
-
-    private IEnumerator ConnectingWaiter()
-    {
-        _panelsSwitcher.ShowProgressPanel();
-
-        float seconds = 5f;
-        var waitTime = new WaitForEndOfFrame();
-
-        float passedTime = 0;
-
-        while(passedTime < seconds)
-        {
-            passedTime += Time.deltaTime;
-            yield return waitTime;
-        }
-
-        if (passedTime >= seconds)
-        {
-            _panelsSwitcher.HideProgressPanel();
-            yield break;
-        }
     }
 }

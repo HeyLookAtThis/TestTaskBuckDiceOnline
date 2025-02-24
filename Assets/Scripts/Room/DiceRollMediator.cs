@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DiceRoller : MonoBehaviour
+public class DiceRollMediator : MonoBehaviour
 {
     [SerializeField] private Button _rollButton;
     [SerializeField] private Transform _diceThrowPoint;
-    [SerializeField] private Dice _dice;
     [SerializeField] private float _force;
     [SerializeField] private float _torque;
+
+    private Dice _dice;
 
     private void OnEnable()
     {
@@ -18,6 +19,8 @@ public class DiceRoller : MonoBehaviour
     {
         _rollButton.onClick.RemoveListener(OnRun);
     }
+
+    public void Initialize(Dice dice) => _dice = dice;
 
     private void OnRun() => _dice.Throw(_diceThrowPoint.position, _force, _torque);
 }

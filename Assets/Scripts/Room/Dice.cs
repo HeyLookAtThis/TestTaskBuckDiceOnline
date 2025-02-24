@@ -11,7 +11,7 @@ public class Dice : MonoBehaviour
         if (_rigidbody.IsSleeping())
         {
             _rigidbody.AddForce(Vector3.up * force, ForceMode.VelocityChange);
-            _rigidbody.AddTorque(Random.insideUnitSphere * torque, ForceMode.VelocityChange);
+            _rigidbody.AddTorque(Random.rotation.eulerAngles * torque, ForceMode.VelocityChange);
 
             StartCoroutine(Mover(position));
         }
