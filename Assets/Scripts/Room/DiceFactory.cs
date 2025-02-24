@@ -3,18 +3,9 @@ using UnityEngine;
 
 public class DiceFactory
 {
-    private Vector3 _position;
-
-    public DiceFactory(Vector3 posiion) => _position = posiion;
-
-    public GameObject Get()
+    public Dice Get(Vector3 position)
     {
-        Dice dice = Object.FindObjectOfType<PhotonDiceView>().Dice;
-        Debug.Log(dice);
-
-        if (dice == null)
-            return PhotonNetwork.InstantiateRoomObject(Prefabs.DicePrefab, _position, Random.rotation);
-
-        return dice.gameObject;
+        GameObject gameObject = PhotonNetwork.InstantiateRoomObject(Prefabs.DicePrefab, position, Random.rotation);
+        return gameObject.GetComponent<Dice>();
     }
 }

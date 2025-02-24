@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 351976390809813847}
   - component: {fileID: -6307513938206627177}
   - component: {fileID: -4416872438602398794}
+  - component: {fileID: 5603083264868321557}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerAvatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,7 +53,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -4416872438602398794}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -72,6 +74,18 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &5603083264868321557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1834605757138318168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b5b82f07a9573a41beda3a6157ff39f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8671629980351000735
 GameObject:
   m_ObjectHideFlags: 0

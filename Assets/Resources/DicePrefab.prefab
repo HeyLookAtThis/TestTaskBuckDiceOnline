@@ -335,7 +335,6 @@ GameObject:
   - component: {fileID: 983510420123443507}
   - component: {fileID: 5826166637254300540}
   - component: {fileID: 4123856386120183527}
-  - component: {fileID: 9157500914176878316}
   m_Layer: 0
   m_Name: DicePrefab
   m_TagString: Untagged
@@ -461,18 +460,6 @@ MonoBehaviour:
   m_SynchronizeAngularVelocity: 1
   m_TeleportEnabled: 0
   m_TeleportIfDistanceGreaterThan: 3
---- !u!114 &9157500914176878316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6874970857068492513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1afd3501b9cb4e348992333a6c6b73fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7193556071642469366
 GameObject:
   m_ObjectHideFlags: 0

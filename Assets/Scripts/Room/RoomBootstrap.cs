@@ -1,14 +1,14 @@
+using Photon.Pun;
 using UnityEngine;
 
-public class RoomBootstrap : MonoBehaviour
+public class RoomBootstrap : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private Transform _diceSpawnPoint;
     [SerializeField] private DiceRollMediator _diceRollMediator;
+    [SerializeField] private DiceSpawner _spawner;
 
-    private void Start()
+    private void Awake()
     {
-        DiceFactory diceFactory = new(_diceSpawnPoint.position);
-        Dice dice = diceFactory.Get().GetComponent<Dice>();
-        _diceRollMediator.Initialize(dice);
+        if(PhotonNetwork.IsMasterClient)
+            _spawner.Run();
     }
 }
