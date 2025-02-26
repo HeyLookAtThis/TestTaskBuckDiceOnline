@@ -42,6 +42,5 @@ public class PlayerNameInputField : MonoBehaviour
 
         PhotonNetwork.NickName = _inputField.text;
         PlayerPrefs.SetString(PlayerNamePrefKey, _inputField.text);
-        Debug.Log(PhotonNetwork.NickName);
     }
 }

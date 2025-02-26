@@ -1,26 +1,18 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
-public class DiceRollMediator : MonoBehaviour
+public class DiceRollMediator : MonoBehaviourPun
 {
     [SerializeField] private Button _rollButton;
-    [SerializeField] private Transform _diceThrowPoint;
-    [SerializeField] private float _force;
-    [SerializeField] private float _torque;
 
-    private Dice _dice;
+    private PlayerAvatar _player;
 
-    private void OnEnable()
-    {
-        _rollButton.onClick.AddListener(OnRun);
-    }
+    private void OnEnable() => _rollButton.onClick.AddListener(OnRollDice);
+    private void OnDisable() => _rollButton.onClick.RemoveListener(OnRollDice);
 
-    private void OnDisable()
-    {
-        _rollButton.onClick.RemoveListener(OnRun);
-    }
+    private void OnRollDice() => _player.ThrowDice();
 
-    public void Initialize(Dice dice) => _dice = dice;
-
-    private void OnRun() => _dice.Throw(_diceThrowPoint.position, _force, _torque);
+    public void Initialize(PlayerAvatar player) => _player = player;
 }

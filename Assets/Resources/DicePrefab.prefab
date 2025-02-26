@@ -421,6 +421,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 3105317636640033573}
+  _force: 2.5
+  _torque: 10
 --- !u!114 &5826166637254300540
 MonoBehaviour:
   m_ObjectHideFlags: 0
