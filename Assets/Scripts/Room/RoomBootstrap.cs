@@ -24,6 +24,9 @@ public class RoomBootstrap : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        //_dice.photonView.TransferOwnership(newPlayer);
+        
+        //Debug.Log(_dice.photonView.Owner);
     }
 
     private void SpawnDice()

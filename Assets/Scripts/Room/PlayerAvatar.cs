@@ -13,8 +13,6 @@ public class PlayerAvatar : MonoBehaviourPunCallbacks
 
     public void Initialize(Vector3 dicePosition, Vector3 throwPosition, Dice dice)
     {
-        Debug.Log(_dice);
-
         _dice = dice;
         _dicePosition = dicePosition;
         _throwPoint = throwPosition;
