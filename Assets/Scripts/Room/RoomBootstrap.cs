@@ -1,9 +1,8 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class RoomBootstrap : MonoBehaviourPunCallbacks
+public class RoomBootstrap : MonoBehaviourPunCallbacks, IPunObservable
 {
     [SerializeField] private Transform _diceSpawnPoint;
     [SerializeField] private Transform _throwPoint;
@@ -11,23 +10,28 @@ public class RoomBootstrap : MonoBehaviourPunCallbacks
 
     private Dice _dice;
     private PlayerAvatar _playerAvatar;
-    private Hashtable _hashtable;
 
     private void Awake()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            SpawnDice();    
-            SpawnPlayer();
-            _mediator.Initialize(_playerAvatar);
-            _hashtable = new Hashtable();
-            _hashtable.Add(Prefabs.DicePrefab, _dice);
+            SpawnDice();
         }
+
+        SpawnPlayer();
+        _mediator.Initialize(_playerAvatar);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        newPlayer.SetCustomProperties(_hashtable);
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+            stream.SendNext(_dice);
+        else
+            _dice = (Dice)stream.ReceiveNext();
     }
 
     private void SpawnDice()
