@@ -2,7 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class RoomBootstrap : MonoBehaviourPunCallbacks, IPunObservable
+public class RoomBootstrap : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Transform _diceSpawnPoint;
     [SerializeField] private Transform _throwPoint;
@@ -24,14 +24,6 @@ public class RoomBootstrap : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-    }
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
-            stream.SendNext(_dice);
-        else
-            _dice = (Dice)stream.ReceiveNext();
     }
 
     private void SpawnDice()

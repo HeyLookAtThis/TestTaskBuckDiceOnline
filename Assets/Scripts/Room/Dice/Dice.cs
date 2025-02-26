@@ -27,7 +27,7 @@ public class Dice : MonoBehaviourPun
 
         if (_rigidbody.IsSleeping())
         {
-            float duration = 0.1f;
+            float duration = 0.5f;
             _rigidbody.DOMove(startingThrowPosition, duration).OnComplete(() => AddForce(startingThrowPosition, throwPosition));
             yield break;
         }
