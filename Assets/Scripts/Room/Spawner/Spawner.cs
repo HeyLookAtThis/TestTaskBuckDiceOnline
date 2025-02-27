@@ -17,15 +17,20 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
     public Dice Dice => _dice;
     public Player Player => _player;
 
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        if(PhotonNetwork.IsMasterClient)
+            CreatePlayer();
+    }
+
     public void Run()
     {
         if (PhotonNetwork.IsMasterClient)
         {
             CreateDice();
             CreatePlayerSpawnPoints();
+            CreatePlayer();
         }
-
-        CreatePlayer();
     }
 
     public void CreateDice()
