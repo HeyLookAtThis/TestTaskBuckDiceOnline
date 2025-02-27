@@ -8,7 +8,7 @@ public class DiceRollMediator : MonoBehaviourPun, IOnEventCallback
 {
     [SerializeField] private Button _rollButton;
 
-    private PlayerAvatar _player;
+    private Player _player;
 
     private void OnEnable()
     {
@@ -31,7 +31,10 @@ public class DiceRollMediator : MonoBehaviourPun, IOnEventCallback
         PhotonNetwork.CurrentRoom.SetCustomProperties(props);
     }
 
-    public void Initialize(PlayerAvatar player) => _player = player;
+    public void Initialize(ISpawnKeeper spawnKeeper)
+    {
+        _player = spawnKeeper.Player;
+    }
 
     public void OnEvent(EventData photonEvent)
     {

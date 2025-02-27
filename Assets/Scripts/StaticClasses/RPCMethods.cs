@@ -4,4 +4,9 @@ public static class RPCMethods
     {
         public const string TakeThenThrow = nameof(TakeThenThrow);
     }
+
+    public static class PlayerSpawnPoint
+    {
+
+    }
 }

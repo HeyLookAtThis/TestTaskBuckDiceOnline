@@ -1,5 +1,6 @@
 public static class Prefabs
 {
     public const string DicePrefab = nameof(DicePrefab);
-    public const string PlayerAvatar = nameof(PlayerAvatar);
+    public const string Player = nameof(Player);
+    public const string PlayerSpawnPoint = nameof(PlayerSpawnPoint);
 }
