@@ -7,9 +7,10 @@ using UnityEngine.UI;
 public class DiceRollMediator : MonoBehaviourPun, IOnEventCallback
 {
     [SerializeField] private Button _rollButton;
+    [SerializeField] private Transform _throwPoint;
 
     private Player _player;
-
+    private Dice _dice;
     private void OnEnable()
     {
         _rollButton.onClick.AddListener(OnRollDice);
@@ -24,15 +25,17 @@ public class DiceRollMediator : MonoBehaviourPun, IOnEventCallback
 
     private void OnRollDice()
     {
-        Hashtable props = new Hashtable
-            {
-                { "Event", "DoSomething" }
-            };
+        Hashtable props = new()
+        {
+            { Events.RollDiceButtonClicked, _player.DicePosition}
+        };
+
         PhotonNetwork.CurrentRoom.SetCustomProperties(props);
     }
 
     public void Initialize(ISpawnKeeper spawnKeeper)
     {
+        _dice = spawnKeeper.Dice;
         _player = spawnKeeper.Player;
     }
 
@@ -42,12 +45,9 @@ public class DiceRollMediator : MonoBehaviourPun, IOnEventCallback
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("Event", out var value))
+                if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(Events.RollDiceButtonClicked, out var value))
                 {
-                    if ((string)value == "DoSomething")
-                    {
-                        _player.ThrowDice();
-                    }
+                    _dice.Throw((Vector3)value);
                 }
             }
         }

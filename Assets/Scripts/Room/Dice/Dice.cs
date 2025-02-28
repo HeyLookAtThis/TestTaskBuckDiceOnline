@@ -9,10 +9,13 @@ public class Dice : MonoBehaviourPun
     [SerializeField] private float _force;
     [SerializeField] private float _torque;
 
-    public void Throw(Vector3 startingThrowPosition, Vector3 throwPosition)
+    private Vector3 _throwPoint;
+    public void Throw(Vector3 startingThrowPosition)
     {
-        this.photonView.RPC(RPCMethods.Dice.TakeThenThrow, RpcTarget.MasterClient, startingThrowPosition, throwPosition);
+        this.photonView.RPC(RPCMethods.Dice.TakeThenThrow, RpcTarget.MasterClient, startingThrowPosition, _throwPoint);
     }
+
+    public void Initialize(Vector3 throwPoint) => _throwPoint = throwPoint;
 
     [PunRPC]
     private void TakeThenThrow(Vector3 startingThrowPosition, Vector3 throwPosition)

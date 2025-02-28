@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlayerFactory
 {
-    public Player Get(Vector3 position, Vector3 dicePlace, Vector3 throwTarget, Dice dice)
+    public Player Get(Vector3 position, Vector3 dicePlace)
     {
         Player player = PhotonNetwork.Instantiate(Prefabs.Player, position, Quaternion.identity).GetComponent<Player>();
-        player.Initialize(dicePlace, throwTarget, dice, GetId());
+        player.Initialize(dicePlace, GetId());
         return player;
     }
 

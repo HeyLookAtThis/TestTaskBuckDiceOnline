@@ -13,44 +13,47 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
     private Dice _dice;
     private Player _player;
     private List<PlayerSpawnPoint> _playerSpawnPoints;
-
     public Dice Dice => _dice;
     public Player Player => _player;
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        if(PhotonNetwork.IsMasterClient)
-            CreatePlayer();
-    }
+        int pointId = 0;
 
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PlayerSpawnPoint spawnPoint = GetFreePlayerSpawnPoint();
+            pointId = spawnPoint.Id;
+
+            spawnPoint.TryPlacePlayer(newPlayer);
+        }
+
+        if (newPlayer.IsLocal)
+        {
+            PlayerSpawnPoint spawnPoint = PhotonNetwork.GetPhotonView(pointId).GetComponent<PlayerSpawnPoint>();
+            CreatePlayer(spawnPoint);
+            _virtualCamera.Follow = spawnPoint.CameraTarget;
+        }
+    }
     public void Run()
     {
         if (PhotonNetwork.IsMasterClient)
         {
             CreateDice();
             CreatePlayerSpawnPoints();
-            CreatePlayer();
         }
     }
-
-    public void CreateDice()
+    private void CreateDice()
     {
         DiceFactory factory = new();
         _dice = factory.Get(_diceSpawnPoints[0].position);
     }
-
-    public void CreatePlayer()
+    private void CreatePlayer(PlayerSpawnPoint spawnPoint)
     {
         PlayerFactory factory = new();
-        PlayerSpawnPoint spawnPoint = GetFreePlayerSpawnPoint();
-
-        _player = factory.Get(spawnPoint.Position, spawnPoint.DicePosition, _throwPoint.position, _dice);
-
-        if (spawnPoint.TryPlacePlayer(_player))
-            _virtualCamera.Follow = spawnPoint.CameraTarget;
+        _player = factory.Get(spawnPoint.Position, spawnPoint.DicePosition);
     }
-
-    public void CreatePlayerSpawnPoints()
+    private void CreatePlayerSpawnPoints()
     {
         _playerSpawnPoints = new List<PlayerSpawnPoint>();
         PlayerSpawnPointsFactory pointsFactory = new();
@@ -58,6 +61,5 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
         foreach (var point in _diceSpawnPoints)
             _playerSpawnPoints.Add(pointsFactory.Create(point.position));
     }
-
     private PlayerSpawnPoint GetFreePlayerSpawnPoint() => _playerSpawnPoints.First(point => point.IsEmpty);
 }

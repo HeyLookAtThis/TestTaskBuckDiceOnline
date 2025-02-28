@@ -7,6 +7,7 @@ public static class RPCMethods
 
     public static class PlayerSpawnPoint
     {
-
+        public const string RemovePlayer = nameof(RemovePlayer);
+        public const string PlacePlayer = nameof(PlacePlayer);
     }
 }

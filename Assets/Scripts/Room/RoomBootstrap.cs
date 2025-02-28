@@ -5,7 +5,6 @@ public class RoomBootstrap : MonoBehaviourPunCallbacks
 {
     [SerializeField] private DiceRollMediator _mediator;
     [SerializeField] private Spawner _spawner;
-
     private void Awake()
     {
         _spawner.Run();

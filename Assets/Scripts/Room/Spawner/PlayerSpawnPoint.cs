@@ -12,24 +12,24 @@ public class PlayerSpawnPoint : MonoBehaviourPunCallbacks
     public Vector3 Position => transform.position;
     public Vector3 DicePosition => _dicePosition;
     public Transform CameraTarget => _cameraTarget;
+    public int Id => this.photonView.ViewID;
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         if (otherPlayer.ActorNumber == _player.Id)
-            RemovePlayer();
+            this.photonView.RPC(RPCMethods.PlayerSpawnPoint.RemovePlayer, RpcTarget.MasterClient, otherPlayer);
     }
-
     public void Initialize(Vector3 dicePosition)
     {
         IsEmpty = true;
         _dicePosition = dicePosition;
     }
 
-    public bool TryPlacePlayer(Player player)
+    public bool TryPlacePlayer(Photon.Realtime.Player player)
     {
         if (IsEmpty)
         {
-            PlacePlayer(player);
+            this.photonView.RPC(RPCMethods.PlayerSpawnPoint.PlacePlayer, RpcTarget.MasterClient, player);
             return true;
         }
 
@@ -37,16 +37,19 @@ public class PlayerSpawnPoint : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void RemovePlayer()
+    private void RemovePlayer(Photon.Realtime.Player player)
     {
-        _player = null;
-        IsEmpty = true;
+        if(player.ActorNumber == _player.Id)
+        {
+            _player = null;
+            IsEmpty = true;
+        }
     }
+
     [PunRPC]
     private void PlacePlayer(Player player)
     {
         _player = player;
-        _player.TakePosition(transform.position);
         IsEmpty = false;
     }
 }
