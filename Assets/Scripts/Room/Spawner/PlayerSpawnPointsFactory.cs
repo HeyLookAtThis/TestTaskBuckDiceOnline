@@ -1,11 +1,12 @@
 using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerSpawnPointsFactory
 {
     public PlayerSpawnPoint Create(Vector3 dicePosition)
     {
-        PlayerSpawnPoint spawnPoint = PhotonNetwork.InstantiateRoomObject(Prefabs.PlayerSpawnPoint, GetPosition(dicePosition), Quaternion.identity).GetComponent<PlayerSpawnPoint>();
+        PlayerSpawnPoint spawnPoint = Object.Instantiate(Resources.Load<PlayerSpawnPoint>(Prefabs.PlayerSpawnPoint), GetPosition(dicePosition), Quaternion.identity);
         spawnPoint.Initialize(dicePosition);
         return spawnPoint;
     }

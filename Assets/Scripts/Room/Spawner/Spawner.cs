@@ -1,4 +1,5 @@
 using Cinemachine;
+using ExitGames.Client.Photon;
 using ExitGames.Client.Photon.StructWrapping;
 using Photon.Pun;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
     [SerializeField] private Transform _throwPoint;
     [SerializeField] private List<Transform> _diceSpawnPoints;
 
+    private int _spawnPointId;
     private Dice _dice;
     private Player _player;
     private List<PlayerSpawnPoint> _playerSpawnPoints;
@@ -18,36 +20,29 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
     public Dice Dice => _dice;
     public Player Player => _player;
 
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
-    {
-        int pointId = 0;
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PlayerSpawnPoint spawnPoint = GetFreePlayerSpawnPoint();
-            pointId = spawnPoint.Id;
-            Debug.Log($"Spawner: spawnPointId {pointId}");
-        }
-
-        if (newPlayer.IsLocal)
-        {
-            PlayerSpawnPoint spawnPoint = PhotonNetwork.GetPhotonView(pointId).GetComponent<PlayerSpawnPoint>();
-            Debug.Log($"Spawner: spawnPoint {spawnPoint}");
-
-            CreatePlayer(spawnPoint);
-        }
-    }
+    //public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    //{
+    //    if (PhotonNetwork.IsMasterClient)
+    //    {
+    //        PlayerSpawnPoint spawnPoint = GetFreePlayerSpawnPoint();
+    //        _spawnPointId = spawnPoint.Id;
+    //        Debug.Log($"Spawner: spawnPointId {_spawnPointId}");
+    //    }
+    //}
 
     public void Run()
     {
         if (PhotonNetwork.IsMasterClient)
         {
             CreateDice();
-            CreatePlayerSpawnPoints();
-
-            PlayerSpawnPoint spawnPoint = GetFreePlayerSpawnPoint();
-            CreatePlayer(spawnPoint);
+            CreaterSpawnPoints();
+            //SaveSpawnPointsToRoomPropities();
         }
+
+        //PlayerSpawnPoint spawnPoint = GetFreePlayerSpawnPoint();
+        //Debug.Log($"Spawner: spawnPoint {spawnPoint}");
+
+        //CreatePlayer(spawnPoint);
     }
 
     private void CreateDice()
@@ -61,11 +56,11 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
         PlayerFactory factory = new();
         _player = factory.Get(spawnPoint.Position, spawnPoint.DicePosition);
 
-        spawnPoint.TryPlacePlayer(_player);
+        //spawnPoint.TryPlacePlayer(_player);
         _virtualCamera.Follow = spawnPoint.CameraTarget;
     }
 
-    private void CreatePlayerSpawnPoints()
+    private void CreaterSpawnPoints()
     {
         _playerSpawnPoints = new List<PlayerSpawnPoint>();
         PlayerSpawnPointsFactory pointsFactory = new();
@@ -74,5 +69,34 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
             _playerSpawnPoints.Add(pointsFactory.Create(point.position));
     }
 
-    private PlayerSpawnPoint GetFreePlayerSpawnPoint() => _playerSpawnPoints.First(point => point.IsEmpty);
+    //private void SaveSpawnPointsToRoomPropities()
+    //{
+    //    foreach (var point in _playerSpawnPoints)
+    //    {
+    //        Hashtable roomPropities = new Hashtable
+    //        {
+    //            {RoomPropitiesKeys.SpawnPoint, point.Id}
+    //        };
+
+    //        PhotonNetwork.CurrentRoom.SetCustomProperties(roomPropities);
+    //    }
+    //}
+
+    //private PlayerSpawnPoint GetFreePlayerSpawnPoint()
+    //{
+
+    //}
+
+    private bool CheckPlayer(Vector3 position)
+    {
+        float radius = 0.5f;
+        var colliders = Physics.OverlapSphere(position, radius);
+
+       var player =  colliders.FirstOrDefault(collider => collider.TryGetComponent<Player>(out Player player));
+
+        if (player == null)
+            return false;
+
+        return true;
+    }
 }
