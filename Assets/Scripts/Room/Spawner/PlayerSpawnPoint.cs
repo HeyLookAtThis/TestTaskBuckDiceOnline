@@ -25,7 +25,7 @@ public class PlayerSpawnPoint : MonoBehaviourPunCallbacks
         _dicePosition = dicePosition;
     }
 
-    public bool TryPlacePlayer(Photon.Realtime.Player player)
+    public bool TryPlacePlayer(Player player)
     {
         if (IsEmpty)
         {

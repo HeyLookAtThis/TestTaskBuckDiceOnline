@@ -25,12 +25,9 @@ public class DiceRollMediator : MonoBehaviourPun, IOnEventCallback
 
     private void OnRollDice()
     {
-        Hashtable props = new()
-        {
-            { Events.RollDiceButtonClicked, _player.DicePosition}
-        };
-
-        PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+        object[] data = new object[] { _player.DicePosition };
+        RaiseEventOptions eventOptions = new() { Receivers = ReceiverGroup.MasterClient };
+        PhotonNetwork.RaiseEvent(Events.RollDiceButtonClickedCode, data, eventOptions, SendOptions.SendUnreliable);
     }
 
     public void Initialize(ISpawnKeeper spawnKeeper)
@@ -45,9 +42,9 @@ public class DiceRollMediator : MonoBehaviourPun, IOnEventCallback
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(Events.RollDiceButtonClicked, out var value))
+                if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(Events.RollDiceButtonClickedCode, out var value))
                 {
-                    _dice.Throw((Vector3)value);
+                    _dice.RunThrower((Vector3)value);
                 }
             }
         }

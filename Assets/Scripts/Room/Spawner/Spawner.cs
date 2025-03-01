@@ -1,4 +1,5 @@
 using Cinemachine;
+using ExitGames.Client.Photon.StructWrapping;
 using Photon.Pun;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
     private Dice _dice;
     private Player _player;
     private List<PlayerSpawnPoint> _playerSpawnPoints;
+
     public Dice Dice => _dice;
     public Player Player => _player;
 
@@ -24,35 +26,42 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
         {
             PlayerSpawnPoint spawnPoint = GetFreePlayerSpawnPoint();
             pointId = spawnPoint.Id;
-
-            spawnPoint.TryPlacePlayer(newPlayer);
         }
 
         if (newPlayer.IsLocal)
         {
             PlayerSpawnPoint spawnPoint = PhotonNetwork.GetPhotonView(pointId).GetComponent<PlayerSpawnPoint>();
             CreatePlayer(spawnPoint);
-            _virtualCamera.Follow = spawnPoint.CameraTarget;
         }
     }
+
     public void Run()
     {
         if (PhotonNetwork.IsMasterClient)
         {
             CreateDice();
             CreatePlayerSpawnPoints();
+
+            PlayerSpawnPoint spawnPoint = GetFreePlayerSpawnPoint();
+            CreatePlayer(spawnPoint);
         }
     }
+
     private void CreateDice()
     {
         DiceFactory factory = new();
-        _dice = factory.Get(_diceSpawnPoints[0].position);
+        _dice = factory.Get(_throwPoint.position);
     }
+
     private void CreatePlayer(PlayerSpawnPoint spawnPoint)
     {
         PlayerFactory factory = new();
         _player = factory.Get(spawnPoint.Position, spawnPoint.DicePosition);
+
+        spawnPoint.TryPlacePlayer(_player);
+        _virtualCamera.Follow = spawnPoint.CameraTarget;
     }
+
     private void CreatePlayerSpawnPoints()
     {
         _playerSpawnPoints = new List<PlayerSpawnPoint>();
@@ -61,5 +70,6 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
         foreach (var point in _diceSpawnPoints)
             _playerSpawnPoints.Add(pointsFactory.Create(point.position));
     }
+
     private PlayerSpawnPoint GetFreePlayerSpawnPoint() => _playerSpawnPoints.First(point => point.IsEmpty);
 }
