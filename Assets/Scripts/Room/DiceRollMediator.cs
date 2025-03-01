@@ -4,23 +4,21 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DiceRollMediator : MonoBehaviourPun, IOnEventCallback
+public class DiceRollMediator : MonoBehaviourPun
 {
     [SerializeField] private Button _rollButton;
     [SerializeField] private Transform _throwPoint;
 
     private Player _player;
-    private Dice _dice;
+
     private void OnEnable()
     {
         _rollButton.onClick.AddListener(OnRollDice);
-        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
     }
 
     private void OnDisable()
     {
         _rollButton.onClick.RemoveListener(OnRollDice);
-        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
     }
 
     private void OnRollDice()
@@ -32,21 +30,6 @@ public class DiceRollMediator : MonoBehaviourPun, IOnEventCallback
 
     public void Initialize(ISpawnKeeper spawnKeeper)
     {
-        _dice = spawnKeeper.Dice;
         _player = spawnKeeper.Player;
-    }
-
-    public void OnEvent(EventData photonEvent)
-    {
-        if (photonEvent.Code == (byte)EventCode.PropertiesChanged)
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(Events.RollDiceButtonClickedCode, out var value))
-                {
-                    _dice.RunThrower((Vector3)value);
-                }
-            }
-        }
     }
 }

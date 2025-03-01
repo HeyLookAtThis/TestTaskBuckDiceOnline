@@ -25,15 +25,12 @@ public class PlayerSpawnPoint : MonoBehaviourPunCallbacks
         _dicePosition = dicePosition;
     }
 
-    public bool TryPlacePlayer(Player player)
+    public void TryPlacePlayer(Player player)
     {
         if (IsEmpty)
         {
             this.photonView.RPC(RPCMethods.PlayerSpawnPoint.PlacePlayer, RpcTarget.MasterClient, player);
-            return true;
         }
-
-        return false;
     }
 
     [PunRPC]

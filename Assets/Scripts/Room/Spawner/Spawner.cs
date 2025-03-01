@@ -26,11 +26,14 @@ public class Spawner : MonoBehaviourPunCallbacks, ISpawnKeeper
         {
             PlayerSpawnPoint spawnPoint = GetFreePlayerSpawnPoint();
             pointId = spawnPoint.Id;
+            Debug.Log($"Spawner: spawnPointId {pointId}");
         }
 
         if (newPlayer.IsLocal)
         {
             PlayerSpawnPoint spawnPoint = PhotonNetwork.GetPhotonView(pointId).GetComponent<PlayerSpawnPoint>();
+            Debug.Log($"Spawner: spawnPoint {spawnPoint}");
+
             CreatePlayer(spawnPoint);
         }
     }
