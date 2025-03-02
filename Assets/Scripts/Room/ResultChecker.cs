@@ -3,22 +3,22 @@ using UnityEngine.Events;
 
 public class ResultChecker : MonoBehaviour
 {
-    private int _result;
+    private int _value;
 
-    private UnityAction<int> _resultChanged;
+    private UnityAction<int> _valueChanged;
 
-    public event UnityAction<int> ResultChanged
+    public event UnityAction<int> ValueChanged
     {
-        add => _resultChanged += value;
-        remove => _resultChanged -= value;
+        add => _valueChanged += value;
+        remove => _valueChanged -= value;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<DiceSide>(out DiceSide side))
         {
-            _result = side.Value;
-            _resultChanged?.Invoke(_result);
+            _value = side.Value;
+            _valueChanged?.Invoke(_value);
         }
     }
 }

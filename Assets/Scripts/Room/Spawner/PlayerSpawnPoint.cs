@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerSpawnPoint : MonoBehaviourPunCallbacks
@@ -15,4 +16,17 @@ public class PlayerSpawnPoint : MonoBehaviourPunCallbacks
     {
         _dicePosition = dicePosition;
     }
+    public bool IsContainPlayer()
+    {
+        float radius = 0.5f;
+        var colliders = Physics.OverlapSphere(Position, radius);
+
+        var player = colliders.FirstOrDefault(collider => collider.TryGetComponent<Player>(out Player player));
+
+        if (player == null)
+            return false;
+
+        return true;
+    }
+
 }

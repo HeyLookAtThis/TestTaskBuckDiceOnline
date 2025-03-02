@@ -8,6 +8,7 @@ public class DiceRollMediator : MonoBehaviourPun
 {
     [SerializeField] private Button _rollButton;
     [SerializeField] private Transform _throwPoint;
+    [SerializeField] private GameMover _gameMover;
 
     private Player _player;
 
@@ -21,11 +22,12 @@ public class DiceRollMediator : MonoBehaviourPun
         _rollButton.onClick.RemoveListener(OnRollDice);
     }
 
-    private void OnRollDice()
+    public void OnRollDice()
     {
         object[] data = new object[] { _player.DicePosition };
         RaiseEventOptions eventOptions = new() { Receivers = ReceiverGroup.MasterClient };
         PhotonNetwork.RaiseEvent(Events.RollDiceButtonClickedCode, data, eventOptions, SendOptions.SendUnreliable);
+        _gameMover.ChangePlayer();
     }
 
     public void Initialize(ISpawnKeeper spawnKeeper)
